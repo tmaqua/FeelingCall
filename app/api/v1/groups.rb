@@ -11,8 +11,19 @@ module V1
         requires :host_user_id, type: Integer, desc: 'ホストユーザid'
       end
 
+      params :user_group_attributes do
+        requires :user_id, type: Integer, desc: 'ユーザid'
+        requires :group_id, type: Integer, desc: 'グループid'
+        optional :like_user_id, type: Integer, desc: '好きなユーザid'
+        optional :is_ready, type: Boolean, desc: '電話をかける準備ができたか'
+      end
+
       def group_params
         ActionController::Parameters.new(params).permit(:name, :host_user_id)
+      end
+
+      def user_group_params
+        ActionController::Parameters.new(params).permit(:user_id, :group_id, :like_user_id, :is_ready)
       end
 
       def find_group
@@ -39,15 +50,25 @@ module V1
         use :attributes
       end
       post '/create', jbuilder: 'v1/groups/create' do
-        # unless User.find(params[:host_user_id])
-        #   error!({message: "Bad Request", code: 400}, 400)
-        # end
 
-        User.find(params[:host_user_id])
-
+        User.find(params[:host_user_id])  # userが見つからなかったら404エラー
         @group = Group.new(group_params)
         if @group.save
-          @status = 201
+          status 201
+        else
+          error!({message: "Bad Request", code: 400}, 400)
+        end
+      end
+
+      desc "post /api/v1/groups/join グループ参加"
+      params do
+        use :user_group_attributes
+      end
+      post '/join', jbuilder: 'v1/groups/join' do
+        User.find(params[:user_id])
+        Group.find(params[:group_id]) # user か group　が見つからなかったら404
+        @user_group = UserGroup.new(user_group_params)
+        if @user_group.save
           status 201
         else
           error!({message: "Bad Request", code: 400}, 400)
