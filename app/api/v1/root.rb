@@ -22,5 +22,6 @@ module V1
     end
 
     mount V1::Users
+    mount V1::Groups
   end
 end
