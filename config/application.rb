@@ -39,5 +39,11 @@ module Template
       g.test_framework :rspec, view_specs: false, fixture: true
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
+
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+    config.middleware.use(Rack::Config) do |env|
+      env['api.tilt.root'] = Rails.root.join 'app', 'views', 'api'
+    end
   end
 end

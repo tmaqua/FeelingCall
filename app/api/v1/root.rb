@@ -21,6 +21,6 @@ module V1
       end
     end
 
-    mount V1::HallInformations
+    mount V1::Users
   end
 end
