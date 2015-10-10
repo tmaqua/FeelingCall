@@ -9,6 +9,7 @@ module V1
       params :attributes do
         requires :name, type: String, desc: 'グループ名'
         requires :host_user_id, type: Integer, desc: 'ホストユーザid'
+        optional :is_start, type: Boolean, desc: '選択が開始されたか'
       end
 
       params :user_group_attributes do
@@ -74,6 +75,18 @@ module V1
           error!({message: "Bad Request", code: 400}, 400)
         end
       end
+
+      desc "put /api/v1/groups/start_select 選択開始"
+      # params do
+      #   use :id
+      # end
+      put '/start_select', jbuilder: 'v1/groups/start_select' do
+        @group = Group.find(params[:group_id])
+        @group.is_start = true
+        @group.save
+      end
+
+
     end
 
   end
