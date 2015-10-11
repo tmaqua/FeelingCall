@@ -23,5 +23,6 @@ module V1
 
     mount V1::Users
     mount V1::Groups
+    mount V1::Dial
   end
 end
