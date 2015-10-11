@@ -9,10 +9,22 @@ module V1
       params :attributes do
         requires :name, type: String, desc: 'グループ名'
         requires :host_user_id, type: Integer, desc: 'ホストユーザid'
+        optional :is_start, type: Boolean, desc: '選択が開始されたか'
+      end
+
+      params :user_group_attributes do
+        requires :user_id, type: Integer, desc: 'ユーザid'
+        requires :group_id, type: Integer, desc: 'グループid'
+        optional :like_user_id, type: Integer, desc: '好きなユーザid'
+        optional :is_ready, type: Boolean, desc: '電話をかける準備ができたか'
       end
 
       def group_params
         ActionController::Parameters.new(params).permit(:name, :host_user_id)
+      end
+
+      def user_group_params
+        ActionController::Parameters.new(params).permit(:user_id, :group_id, :like_user_id, :is_ready)
       end
 
       def find_group
@@ -39,20 +51,62 @@ module V1
         use :attributes
       end
       post '/create', jbuilder: 'v1/groups/create' do
-        # unless User.find(params[:host_user_id])
-        #   error!({message: "Bad Request", code: 400}, 400)
-        # end
 
-        User.find(params[:host_user_id])
-
+        User.find(params[:host_user_id])  # userが見つからなかったら404エラー
         @group = Group.new(group_params)
         if @group.save
-          @status = 201
           status 201
         else
           error!({message: "Bad Request", code: 400}, 400)
         end
       end
+
+      desc "post /api/v1/groups/join グループ参加"
+      params do
+        use :user_group_attributes
+      end
+      post '/join', jbuilder: 'v1/groups/join' do
+        User.find(params[:user_id])
+        Group.find(params[:group_id]) # user か group　が見つからなかったら404
+        @user_group = UserGroup.new(user_group_params)
+        if @user_group.save
+          status 201
+        else
+          error!({message: "Bad Request", code: 400}, 400)
+        end
+      end
+
+      desc "put /api/v1/groups/start_select 選択開始"
+      put '/start_select', jbuilder: 'v1/groups/start_select' do
+        @group = Group.find(params[:group_id])
+        @group.is_start = true
+        @group.save
+      end
+
+      desc "put /api/v1/groups/select_target 気になる子選択"
+      put '/select_target', jbuilder: 'v1/groups/select_target' do
+        group_id = Group.find(params[:group_id]).id
+        user_id = User.find(params[:user_id]).id
+
+        @user_group = UserGroup.find_by(group_id: group_id, user_id: user_id)
+        @user_group.like_user_id = params[:select_id].to_i
+        @user_group.save
+      end
+
+      desc "get /api/v1/groups/ready 準備完了"
+      get '/ready/:group_id/:user_id', jbuilder: 'v1/groups/ready' do
+        group_id = Group.find(params[:group_id].to_i).id
+        user_id = User.find(params[:user_id].to_i).id
+
+        @user_group = UserGroup.find_by(group_id: group_id, user_id: user_id)
+        
+        if @user_group.like_user_id && @user_group.is_ready == true
+          @is_ready = true
+        else
+          @is_ready = false
+        end
+      end
+
     end
 
   end
