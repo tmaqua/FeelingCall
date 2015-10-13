@@ -12,7 +12,9 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'unicorn'
+# gem 'unicorn'
+# Use Puma as the app server
+gem 'puma'
 
 gem 'slim-rails'
 gem 'twilio-ruby'
