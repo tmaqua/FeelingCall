@@ -24,6 +24,9 @@ module V1
 
       desc "GET api/v1/twiml/hello say hello"
       get '/hello' do
+        custom_params = params[:Custom]
+        puts "custom params: #{custom_params}"
+        
         xml_str = Twilio::TwiML::Response.new do |response|
           response.Say "こんにちは", language: "ja-jp"
         end
