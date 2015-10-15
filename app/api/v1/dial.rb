@@ -12,11 +12,11 @@ module V1
       desc "GET api/v1/twiml/dial_murakami 俺にダイアルする"
       get '/dial_murakami' do
         caller = params[:From]
-        puts "caller phone: #{caller.gsub(/\+81/, "0")}"
+        # puts "caller phone: #{caller.gsub(/\+81/, "0")}"
 
         xml_str = Twilio::TwiML::Response.new do |response|
           response.Say "こんにちは #{caller}さん", language: "ja-jp"
-          response.Dial "+818041317484"
+          response.Dial "+818041317484", callerId: "+81345308948"
         end
 
         xml_str
@@ -24,6 +24,9 @@ module V1
 
       desc "GET api/v1/twiml/hello say hello"
       get '/hello' do
+        custom_params = params[:Custom]
+        puts "custom params: #{custom_params}"
+        
         xml_str = Twilio::TwiML::Response.new do |response|
           response.Say "こんにちは", language: "ja-jp"
         end
