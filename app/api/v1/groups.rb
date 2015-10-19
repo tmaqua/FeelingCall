@@ -77,28 +77,44 @@ module V1
       end
 
       desc "put /api/v1/groups/start_select 選択開始"
+      params do
+        requires :group_id, type: Integer, desc: 'グループid'
+      end
       put '/start_select', jbuilder: 'v1/groups/start_select' do
         @group = Group.find(params[:group_id])
-        @group.is_start = true
-        @group.save
+        if @group.update( is_start: true )
+          status 200
+        else
+          error!({message: "Update failed", code: 500}, 500)
+        end
       end
 
       desc "put /api/v1/groups/select_target 気になる子選択"
+      params do
+        requires :user_id, type: Integer, desc: 'ユーザid'
+        requires :group_id, type: Integer, desc: 'グループid'
+        requires :like_user_id, type: Integer, desc: '好きなユーザid'
+      end
       put '/select_target', jbuilder: 'v1/groups/select_target' do
-        group_id = Group.find(params[:group_id]).id
-        user_id = User.find(params[:user_id]).id
-
-        @user_group = UserGroup.find_by(group_id: group_id, user_id: user_id)
-        @user_group.like_user_id = params[:select_id].to_i
-        @user_group.save
+        @user_group = UserGroup.find_by(group_id: params[:group_id], user_id: params[:user_id])
+        
+        if @user_group.update( like_user_id: params[:select_id] )
+          status 200
+        else
+          error!({message: "Update failed", code: 500}, 500)
+        end
       end
 
       desc "get /api/v1/groups/ready 準備完了"
+      params do
+        requires :user_id, type: Integer, desc: 'ユーザid'
+        requires :group_id, type: Integer, desc: 'グループid'
+      end
       get '/ready/:group_id/:user_id', jbuilder: 'v1/groups/ready' do
-        group_id = Group.find(params[:group_id].to_i).id
-        user_id = User.find(params[:user_id].to_i).id
+        # group_id = Group.find(params[:group_id].to_i).id
+        # user_id = User.find(params[:user_id].to_i).id
 
-        @user_group = UserGroup.find_by(group_id: group_id, user_id: user_id)
+        @user_group = UserGroup.find_by(group_id: params[:group_id], user_id: params[:user_id])
         
         if @user_group.like_user_id && @user_group.is_ready == true
           @is_ready = true
