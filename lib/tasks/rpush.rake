@@ -19,7 +19,7 @@ namespace :rpush do
       name: app_name,
       certificate: File.read(certificate_path),
       environment: apns_env,
-      password: '',
+      password: Settings.rpush,
       connections: 1
     )
     puts "saved: RAILS_ENV=#{Rails.env}, APNS_ENV=#{apns_env}, certificate_path=#{certificate_path}"
