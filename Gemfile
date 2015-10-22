@@ -23,6 +23,8 @@ gem 'grape-jbuilder'
 
 gem 'config'
 
+gem 'rpush'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 # Use Capistrano for deployment
