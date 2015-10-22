@@ -2,3 +2,5 @@ twilio:
   account_sid:  ACc6cf69d06f711973cf18deb57c8402ad
   auth_token:   a6252186ac3c0bfd782ee5950364705c
   from_tel:     '+81345308948'
+
+rpush: 'Planningdev2013!'
