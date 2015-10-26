@@ -1,4 +1,4 @@
 json.code "201"
 json.data do
-  json.groupid @group.id
+  json.group_id @group.id
 end
