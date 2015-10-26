@@ -98,7 +98,7 @@ module V1
       put '/select_target', jbuilder: 'v1/groups/select_target' do
         @user_group = UserGroup.find_by(group_id: params[:group_id], user_id: params[:user_id])
         
-        if @user_group.update( like_user_id: params[:select_id] )
+        if @user_group.update( like_user_id: params[:like_user_id] )
           status 200
         else
           error!({message: "Update failed", code: 500}, 500)
