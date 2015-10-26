@@ -66,10 +66,16 @@ module V1
         use :user_group_attributes
       end
       post '/join', jbuilder: 'v1/groups/join' do
-        User.find(params[:user_id])
-        Group.find(params[:group_id]) # user か group　が見つからなかったら404
-        @user_group = UserGroup.new(user_group_params)
-        if @user_group.save
+        user_id = params[:user_id]
+        group_id = params[:group_id]
+
+        user = User.find(user_id)
+        @group = Group.find(group_id) # user か group　が見つからなかったら404
+
+        @users = @group.users
+
+        user_group = UserGroup.new(user_group_params)
+        if user_group.save
           status 201
         else
           error!({message: "Bad Request", code: 400}, 400)
@@ -98,7 +104,7 @@ module V1
       put '/select_target', jbuilder: 'v1/groups/select_target' do
         @user_group = UserGroup.find_by(group_id: params[:group_id], user_id: params[:user_id])
         
-        if @user_group.update( like_user_id: params[:select_id] )
+        if @user_group.update( like_user_id: params[:like_user_id] )
           status 200
         else
           error!({message: "Update failed", code: 500}, 500)
