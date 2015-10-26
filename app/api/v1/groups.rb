@@ -66,10 +66,16 @@ module V1
         use :user_group_attributes
       end
       post '/join', jbuilder: 'v1/groups/join' do
-        User.find(params[:user_id])
-        Group.find(params[:group_id]) # user か group　が見つからなかったら404
-        @user_group = UserGroup.new(user_group_params)
-        if @user_group.save
+        user_id = params[:user_id]
+        group_id = params[:group_id]
+
+        user = User.find(user_id)
+        @group = Group.find(group_id) # user か group　が見つからなかったら404
+
+        @users = @group.users
+
+        user_group = UserGroup.new(user_group_params)
+        if user_group.save
           status 201
         else
           error!({message: "Bad Request", code: 400}, 400)
