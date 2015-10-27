@@ -30,6 +30,15 @@ module V1
       def find_group
         @group = Group.find(params[:id])
       end
+
+      def notification(token, message, data)
+        notification = Rpush::Apns::Notification.new
+        notification.app = Rpush::Apns::App.find_by_name("FeelingCall") # Rpush::Apns::Appインスタンスを設定
+        notification.device_token = token
+        notification.alert = message
+        notification.data = data
+        notification.save!
+      end
     end
 
     resource :groups do
@@ -71,11 +80,22 @@ module V1
 
         user = User.find(user_id)
         @group = Group.find(group_id) # user か group　が見つからなかったら404
-
         @users = @group.users
 
         user_group = UserGroup.new(user_group_params)
         if user_group.save
+          @users.each do |user|
+            data = {
+              type: "user_add",
+              user: {
+                id: user.id,
+                name: user.name,
+                phone_number: user.phone_number,
+                sex: user.sex
+              }
+            }
+            notification(user.device_token, "user add", data)
+          end
           status 201
         else
           error!({message: "Bad Request", code: 400}, 400)
