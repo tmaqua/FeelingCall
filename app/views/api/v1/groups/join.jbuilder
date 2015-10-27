@@ -1,9 +1,9 @@
 json.code "201"
 json.data do
   json.users @users do |user|
-    json.id user.id
-    json.name user.name
-    json.sex user.sex
+    #json.id user.id
+    #json.name user.name
+    #json.sex user.sex
   end
 
   json.group do
