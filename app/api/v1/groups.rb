@@ -88,16 +88,23 @@ module V1
 
         user_group = UserGroup.new(user_group_params)
         if user_group.save
+
+          user_data = Array.new
           @users.each do |user|
-            data = {
-              type: "user_add",
-              users: {
+            user_data.push({
                 id: user.id,
                 name: user.name,
                 phone_number: user.phone_number,
                 sex: user.sex
-              }
-            }
+              })
+          end
+          data = {
+            type: "user_add",
+            users: user_data
+          }
+
+          # print(data)
+          @users.each do |user|
             notification(user.device_token, "", data)
           end
           status 201
