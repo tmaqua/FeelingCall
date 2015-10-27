@@ -32,7 +32,7 @@ module V1
     end
 
     resource :push do
-      desc "GET api/v1/push/test_push/:id ユーザ(id)にpush通知"
+      desc "GET api/v1/push/test_push 俺にpush通知"
       # params do
       #   use :id
       # end
