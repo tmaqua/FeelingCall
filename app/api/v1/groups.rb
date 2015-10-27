@@ -35,7 +35,9 @@ module V1
         notification = Rpush::Apns::Notification.new
         notification.app = Rpush::Apns::App.find_by_name("FeelingCall") # Rpush::Apns::Appインスタンスを設定
         notification.device_token = token
-        notification.alert = message
+        unless message.empty?
+           notification.alert = message
+        end
         notification.data = data
         notification.save!
       end
@@ -96,7 +98,7 @@ module V1
                 sex: user.sex
               }
             }
-            notification(user.device_token, "user add", data)
+            notification(user.device_token, "", data)
           end
           status 201
         else
@@ -116,7 +118,7 @@ module V1
             data = {
               type: "start_select"
             }
-            notification(user.device_token, "start select", data)
+            notification(user.device_token, "", data)
           end
           status 200
         else
@@ -143,7 +145,7 @@ module V1
               data = {
                 type: "complete_selection"
               }
-              notification(user.device_token, "complete selection", data)
+              notification(user.device_token, "", data)
             end
           end
 
