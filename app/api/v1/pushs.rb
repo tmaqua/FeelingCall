@@ -63,10 +63,10 @@ module V1
         data = {
           type: "user_add",
           user: {
-            id: 14,
-            name: "はなこ",
-            phone_num: "000-0000-0000",
-            sex: 2
+            id: @user.id,
+            name: @user.name,
+            phone_number: @user.phone_number,
+            sex: @user.sex
           }
         }
 
