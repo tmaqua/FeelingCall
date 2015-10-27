@@ -38,7 +38,7 @@ module V1
       # end
       get '/test_push' do
         # find_user
-        token = "80f2b46c1710e6b58c871b7e76f79e2c7395a310aed791236915ffb58b58797d"
+        token = "4d8e57ab14b2d9f0d542d962d970c6f357c962ffd0e7fe994307fb57c0c271aa"
         data = {
           type: "user_add",
           user: {
