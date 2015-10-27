@@ -54,6 +54,25 @@ module V1
         # notification(@user.device_token, "FeelingCall Test", {foo: "var"})
       end
 
+      desc "GET api/v1/push/test_push/:id ユーザ(id)にpush通知"
+      get '/test_push/:id' do
+        find_user
+        token = @user.device_token
+        data = {
+          type: "user_add",
+          user: {
+            id: 14,
+            name: "はなこ",
+            phone_num: "000-0000-0000",
+            sex: 2
+          }
+        }
+
+        notification(token, "FeelingCall Test", data)
+        data
+        # notification(@user.device_token, "FeelingCall Test", {foo: "var"})
+      end
+
       desc "GET api/v1/push/group/:id グループ(id)にpush通知"
       params do
         requires :id, type: Integer, desc: "Group id."
