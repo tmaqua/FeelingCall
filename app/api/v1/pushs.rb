@@ -38,7 +38,7 @@ module V1
       # end
       get '/test_push' do
         # find_user
-        token = "3069f0740c958325930b8b8d3aec14c75b5c14e9e18c34e021ef0cbaec892826"
+        token = "80f2b46c1710e6b58c871b7e76f79e2c7395a310aed791236915ffb58b58797d"
         data = {
           type: "user_add",
           user: {
@@ -58,6 +58,8 @@ module V1
       get '/test_push/:id' do
         find_user
         token = @user.device_token
+
+        print("********token: #{token}************")
         data = {
           type: "user_add",
           user: {
