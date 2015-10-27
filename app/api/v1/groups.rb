@@ -109,6 +109,13 @@ module V1
       put '/start_select', jbuilder: 'v1/groups/start_select' do
         @group = Group.find(params[:group_id])
         if @group.update( is_start: true )
+          users = @group.users
+          users.each do |user|
+            data = {
+              type: "start_select"
+            }
+            notification(user.device_token, "start select", data)
+          end
           status 200
         else
           error!({message: "Update failed", code: 500}, 500)
@@ -122,9 +129,22 @@ module V1
         requires :like_user_id, type: Integer, desc: '好きなユーザid'
       end
       put '/select_target', jbuilder: 'v1/groups/select_target' do
-        @user_group = UserGroup.find_by(group_id: params[:group_id], user_id: params[:user_id])
+        group_id = params[:group_id]
+        user_id = params[:user_id]
+
+        @user_group = UserGroup.find_by(group_id: group_id, user_id: user_id)
         
         if @user_group.update( like_user_id: params[:like_user_id] )
+          unless UserGroup.where(group_id: group_id, like_user_id: nil)
+            users = Group.find(group_id).users
+            users.each do |user|
+              data = {
+                type: "complete_selection"
+              }
+              notification(user.device_token, "complete selection", data)
+            end
+          end
+
           status 200
         else
           error!({message: "Update failed", code: 500}, 500)
