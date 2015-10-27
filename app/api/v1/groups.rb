@@ -61,9 +61,11 @@ module V1
       end
       post '/create', jbuilder: 'v1/groups/create' do
 
-        User.find(params[:host_user_id])  # userが見つからなかったら404エラー
+        user = User.find(params[:host_user_id])  # userが見つからなかったら404エラー
         @group = Group.new(group_params)
         if @group.save
+          user_group = UserGroup.new(user_id: user.id, group_id: @group.id)
+          user_group.save!
           status 201
         else
           error!({message: "Bad Request", code: 400}, 400)
