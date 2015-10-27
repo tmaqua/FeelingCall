@@ -91,7 +91,7 @@ module V1
           @users.each do |user|
             data = {
               type: "user_add",
-              user: {
+              users: {
                 id: user.id,
                 name: user.name,
                 phone_number: user.phone_number,
