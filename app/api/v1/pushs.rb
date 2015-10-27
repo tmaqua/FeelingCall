@@ -32,13 +32,13 @@ module V1
     end
 
     resource :push do
-      desc "GET api/v1/push/test_push/:id ユーザ(id)にpush通知"
+      desc "GET api/v1/push/test_push 俺にpush通知"
       # params do
       #   use :id
       # end
       get '/test_push' do
         # find_user
-        token = "3069f0740c958325930b8b8d3aec14c75b5c14e9e18c34e021ef0cbaec892826"
+        token = "4d8e57ab14b2d9f0d542d962d970c6f357c962ffd0e7fe994307fb57c0c271aa"
         data = {
           type: "user_add",
           user: {
@@ -58,13 +58,15 @@ module V1
       get '/test_push/:id' do
         find_user
         token = @user.device_token
+
+        print("********token: #{token}************")
         data = {
           type: "user_add",
           user: {
-            id: 14,
-            name: "はなこ",
-            phone_num: "000-0000-0000",
-            sex: 2
+            id: @user.id,
+            name: @user.name,
+            phone_number: @user.phone_number,
+            sex: @user.sex
           }
         }
 
