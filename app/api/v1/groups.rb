@@ -160,7 +160,7 @@ module V1
         @user_group = UserGroup.find_by(group_id: group_id, user_id: user_id)
         
         if @user_group.update( like_user_id: params[:like_user_id] )
-          unless UserGroup.where(group_id: group_id, like_user_id: nil)
+          if UserGroup.where(group_id: group_id, like_user_id: nil).empty?
             users = Group.find(group_id).users
             users.each do |user|
               data = {
