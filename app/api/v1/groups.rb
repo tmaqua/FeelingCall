@@ -43,6 +43,20 @@ module V1
       end
     end
 
+    resource :user_groups do
+      desc 'GET /user_groups'
+      get '/' do
+        ug = UserGroup.all
+        ug.as_json
+      end
+
+      desc 'GET /user_groups/:group_id'
+      get '/:group_id' do
+        UserGroup.where(group_id: params[:group_id])
+      end
+
+    end
+
     resource :groups do
       desc "GET api/v1/groups グループ全取得"
       get '/', jbuilder: 'v1/groups/index' do
