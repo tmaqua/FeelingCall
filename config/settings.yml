@@ -1,6 +1,7 @@
 twilio:
-  account_sid:  ACc6cf69d06f711973cf18deb57c8402ad
-  auth_token:   a6252186ac3c0bfd782ee5950364705c
-  from_tel:     '+81345308948'
+  account_sid:  AC16e33d49b478ceff92f5da9b331ecf0b
+  auth_token:   9db473063f0941fc410d6e0e92df1e21
+  from_tel:     +815031595870
+  app_sid:      AP3208caa9aad3833849c3f92ac56c206c
 
 rpush: 'Planningdev2013!'
