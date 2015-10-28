@@ -34,9 +34,41 @@ module V1
         xml_str
       end
 
+      desc "GET api/v1/twiml/matching"
+      get '/matching' do
+        group_id = params[:group_id]
+        user_id = params[:user_id] || User.find_by(phone_number: params[:From])
+        from_user = UserGroup.find_by(group_id: group_id, user_id: user_id)
+        to_user = UserGroup.find_by(group_id: group_id, user_id: from_user.like_user_id)
+        phone_number = User.find(from_user.like_user_id).phone_number
+
+        xml_str = Twilio::TwiML::Response.new do |response|
+
+            if to_user.like_user_id == from_user.like_user_id
+              response.Say "マッチングしました", language: "ja-jp"
+              response.Dial "#{phone_number}", callerId: Settings.twilio.from_tel
+            else
+              response.Say "ざんねんでした", language: "ja-jp"
+            end
+        end
+        xml_str
+      end
+
     end
 
     resource :twilio do
+      desc 'GET /api/v1/twilio/token'
+      get '/token' do
+        account_sid = Settings.twilio.account_sid
+        auth_token = Settings.twilio.auth_token
+        app_sid = Settings.twilio.app_sid
+        
+        capability = Twilio::Util::Capability.new account_sid, auth_token
+        capability.allow_client_outgoing app_sid
+        capability.generate
+      end
+
+
       desc "GET api/v1/twilio/dial_murakami 俺にダイアルする"
       get '/dial_murakami' do
         # put your own credentials here
