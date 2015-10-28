@@ -166,7 +166,7 @@ module V1
               data = {
                 type: "complete_selection"
               }
-              notification(user.device_token, "", data)
+              notification(user.device_token, "投票完了しました", data)
             end
           end
 
