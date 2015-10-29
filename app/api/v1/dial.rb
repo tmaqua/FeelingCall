@@ -57,6 +57,8 @@ module V1
     end
 
     resource :twilio do
+      format :txt
+
       desc 'GET /api/v1/twilio/token'
       get '/token' do
         account_sid = Settings.twilio.account_sid
@@ -65,7 +67,9 @@ module V1
 
         capability = Twilio::Util::Capability.new account_sid, auth_token
         capability.allow_client_outgoing app_sid
-        capability.generate
+        token = capability.generate
+
+        token
       end
 
 
