@@ -17,7 +17,7 @@ module V1
         xml_str = Twilio::TwiML::Response.new do |response|
           response.Say "こんにちは #{caller}さん", language: "ja-jp"
           # response.Say "#{unco}", language: "ja-jp"
-          response.Dial "+819094699458", callerId: Settings.twilio.from_tel
+          response.Dial "+819094699458", callerId: '+815031540483'
         end
 
         xml_str
