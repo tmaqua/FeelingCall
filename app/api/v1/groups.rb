@@ -161,10 +161,15 @@ module V1
         
         if @user_group.update( like_user_id: params[:like_user_id] )
           if UserGroup.where(group_id: group_id, like_user_id: nil).empty?
-            users = Group.find(group_id).users
+            group = Group.find(group_id)
+            users = group.users
             users.each do |user|
               data = {
-                type: "complete_selection"
+                type: "complete_selection",
+                group: {
+                  id: group.id,
+                  name: group.name
+                }
               }
               notification(user.device_token, "投票完了しました", data)
             end
