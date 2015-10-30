@@ -22,6 +22,7 @@ module V1
 
         header 'Content-Type', 'text/xml'
         header 'Connection', 'keep-alive'
+        header 'Keep-Alive', 'timeout=15'
         header 'Via', '1.1 vegur'
 
         xml_str
