@@ -21,6 +21,8 @@ module V1
         end
 
         header 'Content-Type', 'text/xml'
+        header 'Connection', 'keep-alive'
+        header 'Via', '1.1 vegur'
 
         xml_str
       end
