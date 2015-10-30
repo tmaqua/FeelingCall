@@ -46,7 +46,7 @@ module V1
 
         xml_str = Twilio::TwiML::Response.new do |response|
 
-            if to_user.like_user_id == from_user.like_user_id
+            if to_user.like_user_id == from_user.id && to_user.id == from_user.like_user_id
               response.Say "マッチングしました", language: "ja-jp"
               response.Dial "#{phone_number}", callerId: Settings.twilio.from_tel
             else
