@@ -20,6 +20,8 @@ module V1
           response.Dial "+819094699458", callerId: '+815031540483'
         end
 
+        header 'Content-Type', 'text/xml'
+
         xml_str
       end
 
