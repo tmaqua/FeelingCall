@@ -12,10 +12,12 @@ module V1
       desc "GET api/v1/twiml/dial_murakami 俺にダイアルする"
       get '/dial_murakami' do
         caller = "むらかみともき"
+        unco = params[:unco]
         # puts "caller phone: #{caller.gsub(/\+81/, "0")}"
 
         xml_str = Twilio::TwiML::Response.new do |response|
           response.Say "こんにちは #{caller}さん", language: "ja-jp"
+          response.Say "#{unco}", language: "ja-jp"
           response.Dial "+818041317484", callerId: "+815031595870"
         end
 
