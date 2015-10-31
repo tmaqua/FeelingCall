@@ -100,6 +100,10 @@ module V1
         @group = Group.find(group_id) # user か group　が見つからなかったら404
         @users = @group.users
 
+        if @group.is_start
+          error!({message: "Group is started", code: 403}, 403)
+        end
+
         user_group = UserGroup.new(user_group_params)
         if user_group.save
 
