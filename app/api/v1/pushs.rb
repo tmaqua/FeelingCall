@@ -58,8 +58,6 @@ module V1
       get '/test_push/:id' do
         find_user
         token = @user.device_token
-
-        print("********token: #{token}************")
         data = {
           type: "user_add",
           user: {
@@ -72,7 +70,6 @@ module V1
 
         notification(token, "FeelingCall Test", data)
         data
-        # notification(@user.device_token, "FeelingCall Test", {foo: "var"})
       end
 
       desc "GET api/v1/push/group/:id グループ(id)にpush通知"

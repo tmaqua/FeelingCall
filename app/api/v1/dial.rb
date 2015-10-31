@@ -2,41 +2,40 @@ require 'twilio-ruby'
 
 module V1
   class Dial < Grape::API
-    helpers do
-      
-    end
 
     resource :twiml do
       format :xml
 
-      desc "GET api/v1/twiml/dial_murakami 俺にダイアルする"
-      get '/dial_murakami' do
-        caller = "むらかみともき"
-        # unco = params[:unco]
+      # desc "GET api/v1/twiml/dial_murakami 俺にダイアルする"
+      # get '/dial_murakami' do
+      #   caller = "むらかみともき"
+      #   # unco = params[:unco]
 
-        xml_str = Twilio::TwiML::Response.new do |response|
-          response.Say "こんにちは #{caller}さん", language: "ja-jp"
-          # response.Say "#{unco}", language: "ja-jp"
-          response.Dial "+819094699458", callerId: '+815031540483'
-        end
+      #   xml_str = Twilio::TwiML::Response.new do |response|
+      #     response.Say "こんにちは #{caller}さん", language: "ja-jp"
+      #     # response.Say "#{unco}", language: "ja-jp"
+      #     response.Dial "+819094699458", callerId: '+815031540483'
+      #   end
 
-        header 'Content-Type', 'text/xml'
-        header 'Connection', 'keep-alive'
-        header 'Keep-Alive', 'timeout=15'
-        header 'Via', '1.1 vegur'
+      #   header 'Content-Type', 'text/xml'
+      #   header 'Connection', 'keep-alive'
+      #   header 'Keep-Alive', 'timeout=15'
+      #   header 'Via', '1.1 vegur'
 
-        xml_str
-      end
+      #   xml_str
+      # end
 
       desc "GET api/v1/twiml/matching"
       get '/matching' do
         group_id = params[:group_id]
         user_id = params[:user_id]
-        from_user = UserGroup.find_by(group_id: group_id, user_id: user_id)
-        to_user = UserGroup.find_by(group_id: group_id, user_id: from_user.like_user_id)
-        phone_number = User.find(from_user.like_user_id).phone_number.gsub(/^0/, "+81")
 
-        xml_str = Twilio::TwiML::Response.new do |response|
+        begin
+          from_user = UserGroup.find_by(group_id: group_id, user_id: user_id)
+          to_user = UserGroup.find_by(group_id: group_id, user_id: from_user.like_user_id)
+          phone_number = User.find(from_user.like_user_id).phone_number.gsub(/^0/, "+81")
+
+          xml_str = Twilio::TwiML::Response.new do |response|
 
             if to_user.like_user_id == from_user.user_id && to_user.user_id == from_user.like_user_id
               response.Say "マッチングしました", language: "ja-jp"
@@ -44,8 +43,18 @@ module V1
             else
               response.Say "ざんねんでした", language: "ja-jp"
             end
+          end
+          xml_str # => response Twiml 
+
+        rescue Exception => e
+          # rescueして失敗twimlを返す
+          print("****ERROR****\n#{e}\n")
+          xml_str = Twilio::TwiML::Response.new do |response|
+            response.Say "電話に失敗しました", language: "ja-jp"
+            response.Say "データがふせいです", language: "ja-jp"
+          end
+          xml_str
         end
-        xml_str
       end
 
     end

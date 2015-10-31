@@ -36,6 +36,20 @@ module V1
         find_user
       end
 
+      desc 'PUT /api/v1/user/:id ユーザ1つデータ変更'
+      params do
+        use :id
+        use :attributes
+      end
+      put '/:id' do
+        find_user
+        if @user.update(user_params)
+          @user
+        else
+          error!({message: "Bad Request", code: 400}, 400)
+        end
+      end
+
       desc "post /api/v1/user/registユーザ登録"
       params do
         use :attributes
