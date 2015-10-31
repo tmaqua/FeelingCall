@@ -117,7 +117,6 @@ module V1
             users: user_data
           }
 
-          # print(data)
           @users.each do |user|
             notification(user.device_token, "", data)
           end

@@ -24,6 +24,6 @@ module V1
     mount V1::Users
     mount V1::Groups
     mount V1::Dial
-    mount V1::Pushs
+    # mount V1::Pushs
   end
 end
