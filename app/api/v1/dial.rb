@@ -38,10 +38,10 @@ module V1
           xml_str = Twilio::TwiML::Response.new do |response|
 
             if to_user.like_user_id == from_user.user_id && to_user.user_id == from_user.like_user_id
-              response.Say "マッチングしました", language: "ja-jp"
+              # response.Say "マッチングしました", language: "ja-jp"
               response.Dial "#{phone_number}", callerId: Settings.twilio.from_tel
             else
-              response.Say "ざんねんでした", language: "ja-jp"
+              response.Say "こちらは、フィーリング運営事務局です。お相手は、あなたに興味が無いようです。またのご利用をお待ちしております。", language: "ja-jp"
             end
           end
           xml_str # => response Twiml 
