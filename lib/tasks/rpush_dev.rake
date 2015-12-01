@@ -5,7 +5,7 @@ namespace :rpush do
   task install_dev: :environment do |current_task|
     puts "start #{current_task.name}"
 
-    app_name = 'FeelingCall'
+    app_name = 'com.planningdev.pandaberry-KontactApp'
     apns_env = 'sandbox'
 
     if Rpush::Apns::App.where(name: app_name, environment: apns_env).exists?
@@ -20,7 +20,7 @@ namespace :rpush do
       name: app_name,
       certificate: File.read(certificate_path),
       environment: apns_env,
-      password: Settings.rpush,
+      password: "Planningdev2013!",
       connections: 1
     )
     puts "saved: RAILS_ENV=#{Rails.env}, APNS_ENV=#{apns_env}, certificate_path=#{certificate_path}"
